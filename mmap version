@@ -1,0 +1,93 @@
+/*******************************************************************************
+ * Name          : commonwordfinder.cpp
+ * Author        : Jonathan Pavlik
+ * Date          : April 26, 2014
+ * Version       : 0.1
+ * Pledge        : I pledge my honor that I have abided by the Stevens Honor System -- Jonathan Pavlik
+ ******************************************************************************/
+#include "rbtree.h"
+#include <iostream>
+#include <sstream>
+#include <iomanip>
+#include <sstream>
+#include <string>
+#include <fstream>
+#include <cmath>
+
+using namespace std;
+
+//function for inserting to the RBT tree
+//checks if word already exists if it does increment value element
+//otherwise insert word as key with value of 1
+void insert(string key, RedBlackTree<string, int> *words) {
+  if(words->find(key) == words->end()) {
+    words->insert(key, 1);
+  }
+  else {
+    RedBlackTree<string, int>::iterator exists = words->find(key);
+    ++exists->second;
+  }
+}
+
+int main(int argc, char const *argv[]) {
+  //check for proper amt of argument
+  if(argc > 3 || argc < 2) {
+    cerr << "Usage: ./commonwordfinder <filename> [limit]";
+    return 1;
+  }
+
+  //create default word limit
+  //otherwise if one was given and its valid change it
+  int common_word_number = 10;
+  if(argc == 3) {
+    istringstream iss(argv[2]);
+    if((!(iss>>common_word_number) || common_word_number <= 0) ) {
+      cerr << "Error: Invalid limit \'" << argv[2] << "\' received.";
+      return 1;
+    }
+  }
+
+  
+
+  //create vector to store key and value from nodes
+  vector<pair<string, int> > most_common;
+  //set max size of vector
+  most_common.reserve(common_word_number);
+  //push the max size of elements to the vector from the first so many nodes of the tree
+  auto it = words->begin();
+  for (int i = 0; i < common_word_number && it != words->end(); i++, ++it) {
+    most_common.push_back(*it);
+  }
+  //sort them by the value
+  stable_sort(most_common.begin(), most_common.end(), [](auto a, auto b) { return a.second > b.second; });
+  //iterate through the rest of the ndoes if the value of current node
+  //is greater than the value of the last node in the last drop it
+  //then find the right spot to put the new key value pair in the vector
+  for (; it != words->end(); ++it) {
+    if (it->second > most_common.back().second) {
+      most_common.pop_back();
+      most_common.insert(upper_bound(most_common.begin(), most_common.end(), *it, [](auto a, auto b) { return a.second > b.second; }), *it);
+    }
+  }
+
+  //print the information out
+  cout << "Total unique words: " << words->size() << endl;
+  int wordNumber = 1;
+  int space;
+  if(most_common.size() < (unsigned)common_word_number) space = floor(log10(most_common.size())) + 1;
+  else space = floor(log10(common_word_number)) + 1;
+  if (space == 1) --space;
+  int i = 1;
+  //grab size of biggest word
+  unsigned int wordmax = 0;
+  for(auto it=most_common.begin(); it!=most_common.end(); ++it, ++i) {
+    if(it->first.length() > wordmax) wordmax = it->first.length();
+  }
+
+  for(auto it=most_common.begin(); it!=most_common.end(); ++it, ++wordNumber) {
+    cout << setw(space) << wordNumber << ". " << it->first << setw(wordmax-it->first.length() + floor(log10(it->second)) + 2) << setfill(' ') << it->second << endl;
+  }
+  //delete the tree
+  delete words;
+  return 0;
+}
