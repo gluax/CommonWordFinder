@@ -86,7 +86,7 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-noinst_PROGRAMS = commonwordfinder$(EXEEXT) \
+noinst_PROGRAMS = tester$(EXEEXT) commonwordfinder$(EXEEXT) \
 	commonwordfinder_vector$(EXEEXT) \
 	commonwordfinder_mmap$(EXEEXT)
 subdir = .
@@ -114,6 +114,9 @@ am_commonwordfinder_vector_OBJECTS =  \
 commonwordfinder_vector_OBJECTS =  \
 	$(am_commonwordfinder_vector_OBJECTS)
 commonwordfinder_vector_LDADD = $(LDADD)
+am_tester_OBJECTS = tester.$(OBJEXT)
+tester_OBJECTS = $(am_tester_OBJECTS)
+tester_LDADD = $(LDADD)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -144,10 +147,10 @@ am__v_CXXLD_ = $(am__v_CXXLD_@AM_DEFAULT_V@)
 am__v_CXXLD_0 = @echo "  CXXLD   " $@;
 am__v_CXXLD_1 = 
 SOURCES = $(commonwordfinder_SOURCES) $(commonwordfinder_mmap_SOURCES) \
-	$(commonwordfinder_vector_SOURCES)
+	$(commonwordfinder_vector_SOURCES) $(tester_SOURCES)
 DIST_SOURCES = $(commonwordfinder_SOURCES) \
 	$(commonwordfinder_mmap_SOURCES) \
-	$(commonwordfinder_vector_SOURCES)
+	$(commonwordfinder_vector_SOURCES) $(tester_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -204,7 +207,7 @@ AWK = @AWK@
 CPPFLAGS = @CPPFLAGS@
 CXX = @CXX@
 CXXDEPMODE = @CXXDEPMODE@
-CXXFLAGS = -std=c++14 -g -Wall -pedantic -Werror
+CXXFLAGS = -O3 -std=c++14 -g -Wall -pedantic -Werror
 CYGPATH_W = @CYGPATH_W@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
@@ -271,6 +274,7 @@ pdfdir = @pdfdir@
 prefix = @prefix@
 program_transform_name = @program_transform_name@
 psdir = @psdir@
+runstatedir = @runstatedir@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 srcdir = @srcdir@
@@ -280,9 +284,10 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 COMMON = node.h rbtree.h tree.h treeprinter.h
-commonwordfinder_SOURCES = commonwordfinder.cpp
-commonwordfinder_vector_SOURCES = commonwordfinder_vector.cpp
-commonwordfinder_mmap_SOURCES = commonwordfinder_mmap.cpp
+commonwordfinder_SOURCES = COMMON commonwordfinder.cpp
+commonwordfinder_vector_SOURCES = COMMON commonwordfinder_vector.cpp
+commonwordfinder_mmap_SOURCES = COMMON commonwordfinder_mmap.cpp
+tester_SOURCES = COMMON tester.cpp
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -352,6 +357,10 @@ commonwordfinder_vector$(EXEEXT): $(commonwordfinder_vector_OBJECTS) $(commonwor
 	@rm -f commonwordfinder_vector$(EXEEXT)
 	$(AM_V_CXXLD)$(CXXLINK) $(commonwordfinder_vector_OBJECTS) $(commonwordfinder_vector_LDADD) $(LIBS)
 
+tester$(EXEEXT): $(tester_OBJECTS) $(tester_DEPENDENCIES) $(EXTRA_tester_DEPENDENCIES) 
+	@rm -f tester$(EXEEXT)
+	$(AM_V_CXXLD)$(CXXLINK) $(tester_OBJECTS) $(tester_LDADD) $(LIBS)
+
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
 
@@ -361,6 +370,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/commonwordfinder.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/commonwordfinder_mmap.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/commonwordfinder_vector.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tester.Po@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<

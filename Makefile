@@ -86,7 +86,7 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-noinst_PROGRAMS = commonwordfinder$(EXEEXT) \
+noinst_PROGRAMS = tester$(EXEEXT) commonwordfinder$(EXEEXT) \
 	commonwordfinder_vector$(EXEEXT) \
 	commonwordfinder_mmap$(EXEEXT)
 subdir = .
@@ -114,6 +114,9 @@ am_commonwordfinder_vector_OBJECTS =  \
 commonwordfinder_vector_OBJECTS =  \
 	$(am_commonwordfinder_vector_OBJECTS)
 commonwordfinder_vector_LDADD = $(LDADD)
+am_tester_OBJECTS = tester.$(OBJEXT)
+tester_OBJECTS = $(am_tester_OBJECTS)
+tester_LDADD = $(LDADD)
 AM_V_P = $(am__v_P_$(V))
 am__v_P_ = $(am__v_P_$(AM_DEFAULT_VERBOSITY))
 am__v_P_0 = false
@@ -144,10 +147,10 @@ am__v_CXXLD_ = $(am__v_CXXLD_$(AM_DEFAULT_VERBOSITY))
 am__v_CXXLD_0 = @echo "  CXXLD   " $@;
 am__v_CXXLD_1 = 
 SOURCES = $(commonwordfinder_SOURCES) $(commonwordfinder_mmap_SOURCES) \
-	$(commonwordfinder_vector_SOURCES)
+	$(commonwordfinder_vector_SOURCES) $(tester_SOURCES)
 DIST_SOURCES = $(commonwordfinder_SOURCES) \
 	$(commonwordfinder_mmap_SOURCES) \
-	$(commonwordfinder_vector_SOURCES)
+	$(commonwordfinder_vector_SOURCES) $(tester_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -194,22 +197,22 @@ distuninstallcheck_listfiles = find . -type f -print
 am__distuninstallcheck_listfiles = $(distuninstallcheck_listfiles) \
   | sed 's|^\./|$(prefix)/|' | grep -v '$(infodir)/dir$$'
 distcleancheck_listfiles = find . -type f -print
-ACLOCAL = ${SHELL} "/Users/jpavlik/Documents/CS 385/RBTCode/Word finder/missing" aclocal-1.15
+ACLOCAL = ${SHELL} /home/jpavlik/Documents/Programming/CommonWordFinder/missing aclocal-1.15
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 1
-AUTOCONF = ${SHELL} "/Users/jpavlik/Documents/CS 385/RBTCode/Word finder/missing" autoconf
-AUTOHEADER = ${SHELL} "/Users/jpavlik/Documents/CS 385/RBTCode/Word finder/missing" autoheader
-AUTOMAKE = ${SHELL} "/Users/jpavlik/Documents/CS 385/RBTCode/Word finder/missing" automake-1.15
-AWK = awk
+AUTOCONF = ${SHELL} /home/jpavlik/Documents/Programming/CommonWordFinder/missing autoconf
+AUTOHEADER = ${SHELL} /home/jpavlik/Documents/Programming/CommonWordFinder/missing autoheader
+AUTOMAKE = ${SHELL} /home/jpavlik/Documents/Programming/CommonWordFinder/missing automake-1.15
+AWK = mawk
 CPPFLAGS = 
 CXX = g++
 CXXDEPMODE = depmode=gcc3
-CXXFLAGS = -std=c++14 -g -Wall -pedantic -Werror
+CXXFLAGS = -O3 -std=c++14 -g -Wall -pedantic -Werror
 CYGPATH_W = echo
 DEFS = -DHAVE_CONFIG_H
 DEPDIR = .deps
-ECHO_C = \c
-ECHO_N = 
+ECHO_C = 
+ECHO_N = -n
 ECHO_T = 
 EXEEXT = 
 INSTALL = /usr/bin/install -c
@@ -222,8 +225,8 @@ LIBOBJS =
 LIBS = 
 LN_S = ln -s
 LTLIBOBJS = 
-MAKEINFO = ${SHELL} "/Users/jpavlik/Documents/CS 385/RBTCode/Word finder/missing" makeinfo
-MKDIR_P = ./install-sh -c -d
+MAKEINFO = ${SHELL} /home/jpavlik/Documents/Programming/CommonWordFinder/missing makeinfo
+MKDIR_P = /bin/mkdir -p
 OBJEXT = o
 PACKAGE = commonwordfinder
 PACKAGE_BUGREPORT = jpavlik@stevens.edu
@@ -234,13 +237,13 @@ PACKAGE_URL =
 PACKAGE_VERSION = 0.1
 PATH_SEPARATOR = :
 SET_MAKE = 
-SHELL = /bin/sh
+SHELL = /bin/bash
 STRIP = 
 VERSION = 0.1
-abs_builddir = /Users/jpavlik/Documents/CS 385/RBTCode/Word finder
-abs_srcdir = /Users/jpavlik/Documents/CS 385/RBTCode/Word finder
-abs_top_builddir = /Users/jpavlik/Documents/CS 385/RBTCode/Word finder
-abs_top_srcdir = /Users/jpavlik/Documents/CS 385/RBTCode/Word finder
+abs_builddir = /home/jpavlik/Documents/Programming/CommonWordFinder
+abs_srcdir = /home/jpavlik/Documents/Programming/CommonWordFinder
+abs_top_builddir = /home/jpavlik/Documents/Programming/CommonWordFinder
+abs_top_srcdir = /home/jpavlik/Documents/Programming/CommonWordFinder
 ac_ct_CXX = g++
 am__include = include
 am__leading_dot = .
@@ -259,7 +262,7 @@ host_alias =
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} '/Users/jpavlik/Documents/CS 385/RBTCode/Word finder/install-sh'
+install_sh = ${SHELL} /home/jpavlik/Documents/Programming/CommonWordFinder/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -271,6 +274,7 @@ pdfdir = ${docdir}
 prefix = /usr/local
 program_transform_name = s,x,x,
 psdir = ${docdir}
+runstatedir = ${localstatedir}/run
 sbindir = ${exec_prefix}/sbin
 sharedstatedir = ${prefix}/com
 srcdir = .
@@ -280,9 +284,10 @@ top_build_prefix =
 top_builddir = .
 top_srcdir = .
 COMMON = node.h rbtree.h tree.h treeprinter.h
-commonwordfinder_SOURCES = commonwordfinder.cpp
-commonwordfinder_vector_SOURCES = commonwordfinder_vector.cpp
-commonwordfinder_mmap_SOURCES = commonwordfinder_mmap.cpp
+commonwordfinder_SOURCES = COMMON commonwordfinder.cpp
+commonwordfinder_vector_SOURCES = COMMON commonwordfinder_vector.cpp
+commonwordfinder_mmap_SOURCES = COMMON commonwordfinder_mmap.cpp
+tester_SOURCES = COMMON tester.cpp
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -352,6 +357,10 @@ commonwordfinder_vector$(EXEEXT): $(commonwordfinder_vector_OBJECTS) $(commonwor
 	@rm -f commonwordfinder_vector$(EXEEXT)
 	$(AM_V_CXXLD)$(CXXLINK) $(commonwordfinder_vector_OBJECTS) $(commonwordfinder_vector_LDADD) $(LIBS)
 
+tester$(EXEEXT): $(tester_OBJECTS) $(tester_DEPENDENCIES) $(EXTRA_tester_DEPENDENCIES) 
+	@rm -f tester$(EXEEXT)
+	$(AM_V_CXXLD)$(CXXLINK) $(tester_OBJECTS) $(tester_LDADD) $(LIBS)
+
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
 
@@ -361,6 +370,7 @@ distclean-compile:
 include ./$(DEPDIR)/commonwordfinder.Po
 include ./$(DEPDIR)/commonwordfinder_mmap.Po
 include ./$(DEPDIR)/commonwordfinder_vector.Po
+include ./$(DEPDIR)/tester.Po
 
 .cpp.o:
 	$(AM_V_CXX)$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<

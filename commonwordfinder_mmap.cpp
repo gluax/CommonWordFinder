@@ -71,11 +71,8 @@ int main(int argc, char const *argv[]) {
   for(int i = 0; i < fileInfo.st_size; ++i) {
     //convert upper to lower
     c = map[i];
-    if(c >= 65 &&  c <= 90) {
-      word.push_back(c^' ');
-    }
     //check if other valid character
-    else if( (c >= 97 && c <= 122) || c == 45 || c == 39 ) {
+    if( (c >= 97 && c <= 122) || c == 45 || c == 39 ) {
       word.push_back(c);
     }
     //otherwise
@@ -89,8 +86,11 @@ int main(int argc, char const *argv[]) {
       }
       word = "";
     }
+    if(c >= 65 &&  c <= 90) {
+      word.push_back(c^' ');
+    }
   }
-  //make sure to close gile
+  //make sure to close file
   close(fd);
 
 
@@ -100,14 +100,23 @@ int main(int argc, char const *argv[]) {
   size_t j = 0;
   //while nodes in the tree put them in the array into the proper spot leftmost being highest occurance
   while (it != words->end()) {
-    pair<string, int>* pair_ptr = new pair<string, int>(*it);
-    most_common[j] = pair_ptr;
+    if ((j < (unsigned)common_word_number && ++j) || it->second > most_common[j-1]->second) {
+      auto temp(*it);
+      size_t place = upper_bound(most_common, most_common + j-1, &temp, [](auto a, auto b) { return a->second > b->second; }) - most_common;
+      pair<string, int>* pair_ptr;
+      if ((int) j-1 < common_word_number) {
+        pair_ptr = new pair<string, int>(*it);
+      } else {
+        pair_ptr = most_common[j-1];
+        *pair_ptr = *it;
+      }
+      for (int i = j-2; i >= (int) place; i--) {
+        most_common[i+1] = most_common[i];
+      }
+      most_common[place] = pair_ptr;
+    }
     ++it;
-    ++j;
-    cout << "first: " << pair_ptr->first << endl;
-    delete pair_ptr;
   }
-  stable_sort(most_common, most_common + j, [](auto a, auto b) { return a->second > b->second; });
 
   //print them out
   cout << "Total unique words: " << words->size() << endl;
@@ -119,10 +128,14 @@ int main(int argc, char const *argv[]) {
     if(most_common[i]->first.size() > wordmax) wordmax = most_common[i]->first.size();
   }
 
-  for(int i = 0; i < common_word_number; ++i, ++wordNumber) {
+  for(int i = 0; i < int(j); ++i, ++wordNumber) {
     cout << setw(space) << right << wordNumber << ". " << setw(wordmax) << left << most_common[i]->first << " " << most_common[i]->second << endl;
   }
 
+  for (int i = 0; i < (int) j; ++i) {
+    delete most_common[i];
+  }
   delete[] most_common;
+  delete words;
   return 0;
 }

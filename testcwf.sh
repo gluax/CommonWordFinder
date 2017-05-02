@@ -1,6 +1,6 @@
 #!/bin/bash
 
-file=commonwordfinder.cpp
+file=commonwordfinder_mmap.cpp
 
 if [ ! -f "$file" ]; then
     echo -e "Error: File '$file' not found.\nTest failed."
